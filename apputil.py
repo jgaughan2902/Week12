@@ -6,8 +6,22 @@ import matplotlib.pyplot as plt
 
 
 def update_board(current_board):
-    # your code here ...
-    updated_board = current_board
+
+    neighbors = (
+        np.roll(np.roll(current_board, 1, 0), 1, 1) +
+        np.roll(np.roll(current_board, 1, 0), 0, 1) +
+        np.roll(np.roll(current_board, 1, 0), -1, 1) +
+        np.roll(np.roll(current_board, 0, 0), 1, 1) +
+        np.roll(np.roll(current_board, 0, 0), -1, 1) +
+        np.roll(np.roll(current_board, -1, 0), 1, 1) +
+        np.roll(np.roll(current_board, -1, 0), 0, 1) +
+        np.roll(np.roll(current_board, -1, 0), -1, 1)
+    )
+
+    survive = (current_board == 1) & ((neighbors == 2) | (neighbors == 3))
+    born = (current_board == 0) & (neighbors == 3)
+
+    updated_board = (survive | born).astype(int)
 
     return updated_board
 
