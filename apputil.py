@@ -6,21 +6,40 @@ import matplotlib.pyplot as plt
 
 
 def update_board(current_board):
+    '''
+    Update each cell's dead or alive status on the board.
 
+    Parameters:
+    current_board (np.array): A binary NumPy array used to
+    execute a step in Conway's game of life.
+
+    Return value:
+    updated_board (np.array): An array of integers representing
+    the binary form of the next board to be used.
+    '''
+
+    # Finding the sum of the values of the 8 cells 
+    # that surround each cell on the board.
     neighbors = (
-        np.roll(np.roll(current_board, 1, 0), 1, 1) +
-        np.roll(np.roll(current_board, 1, 0), 0, 1) +
-        np.roll(np.roll(current_board, 1, 0), -1, 1) +
-        np.roll(np.roll(current_board, 0, 0), 1, 1) +
-        np.roll(np.roll(current_board, 0, 0), -1, 1) +
-        np.roll(np.roll(current_board, -1, 0), 1, 1) +
-        np.roll(np.roll(current_board, -1, 0), 0, 1) +
-        np.roll(np.roll(current_board, -1, 0), -1, 1)
+        np.roll(np.roll(current_board, 1, 0), 1, 1) +  # upper-left
+        np.roll(np.roll(current_board, 1, 0), 0, 1) +  # upper-middle
+        np.roll(np.roll(current_board, 1, 0), -1, 1) + # upper-right
+        np.roll(np.roll(current_board, 0, 0), 1, 1) +  # left-middle
+        np.roll(np.roll(current_board, 0, 0), -1, 1) + # right middle
+        np.roll(np.roll(current_board, -1, 0), 1, 1) + # lower-left
+        np.roll(np.roll(current_board, -1, 0), 0, 1) + # lower-middle
+        np.roll(np.roll(current_board, -1, 0), -1, 1)  # lower-right
     )
 
+    # Apply the rules of the game by defining when a cell survives (which is
+    # when a cell is alive and has 2 or 3 surrounding alive cells) or is 
+    # born (which is when the cell is dead but there are 3 alive neighbor cells).
     survive = (current_board == 1) & ((neighbors == 2) | (neighbors == 3))
     born = (current_board == 0) & (neighbors == 3)
 
+    # The updated board consists of alive cells (defined as 'survive' or
+    # 'born' cells) and marks them as alive while every other cell is
+    # considered dead.
     updated_board = (survive | born).astype(int)
 
     return updated_board
