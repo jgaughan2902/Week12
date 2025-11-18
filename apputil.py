@@ -19,10 +19,14 @@ def update_board(current_board):
     the binary form of the next board to be used.
     '''
 
+    # Define the kernel with 1s surrounding a single zero.
     kernel = np.array([[1, 1, 1],
                        [1, 0, 1],
                        [1, 1, 1]])
 
+
+    # Perform a two-dimensional convolution operation to find the amount of total 
+    # alive cells surrounding a chosen cell.
     neighbors = convolve2d(current_board, kernel, 
                            mode = 'same', boundary = 'fill', fillvalue = 0)
 
