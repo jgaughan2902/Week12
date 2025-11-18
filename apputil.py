@@ -3,6 +3,7 @@ from IPython.display import clear_output
 import time
 import seaborn as sns
 import matplotlib.pyplot as plt
+from scipy.signal import convolve2d
 
 
 def update_board(current_board):
@@ -18,18 +19,13 @@ def update_board(current_board):
     the binary form of the next board to be used.
     '''
 
-    # Finding the sum of the values of the 8 cells 
-    # that surround each cell on the board.
-    neighbors = (
-        np.roll(np.roll(current_board, 1, 0), 1, 1) +  # upper-left
-        np.roll(np.roll(current_board, 1, 0), 0, 1) +  # upper-middle
-        np.roll(np.roll(current_board, 1, 0), -1, 1) + # upper-right
-        np.roll(np.roll(current_board, 0, 0), 1, 1) +  # left-middle
-        np.roll(np.roll(current_board, 0, 0), -1, 1) + # right middle
-        np.roll(np.roll(current_board, -1, 0), 1, 1) + # lower-left
-        np.roll(np.roll(current_board, -1, 0), 0, 1) + # lower-middle
-        np.roll(np.roll(current_board, -1, 0), -1, 1)  # lower-right
-    )
+    kernel = np.array([[1, 1, 1],
+                       [1, 0, 1],
+                       [1, 1, 1]])
+
+    neighbors = convolve2d(current_board, kernel, 
+                           mode = 'same', boundary = 'fill', fillvalue = 0)
+
 
     # Apply the rules of the game by defining when a cell survives (which is
     # when a cell is alive and has 2 or 3 surrounding alive cells) or is 
